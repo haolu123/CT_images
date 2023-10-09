@@ -38,13 +38,13 @@ def main():
         device = torch.device("cuda:0")
         print("Training with a single process on 1 GPU.")
     # load the model
-    backbone = Backbone()
-    backbone.load_state_dict(torch.load("../RadImageNet_pytorch/ResNet50.pt"))
-    classifier = Classifier(num_class=1)
-    model = nn.Sequential(backbone, classifier)
-    # model = SEResNet50(spatial_dims=2, in_channels=3, pretrained=False, num_classes=8)
-    for param in backbone.parameters():
-        param.requires_grad = False
+    # backbone = Backbone()
+    # backbone.load_state_dict(torch.load("../RadImageNet_pytorch/ResNet50.pt"))
+    # classifier = Classifier(num_class=1)
+    # model = nn.Sequential(backbone, classifier)
+    model = SEResNet50(spatial_dims=2, in_channels=3, pretrained=False, num_classes=8)
+    # for param in backbone.parameters():
+    #     param.requires_grad = False
     # model.cuda()
 
 
@@ -58,8 +58,8 @@ def main():
     # facal_loss = FocalLoss(to_onehot_y=True,use_softmax=True)
     # hausdorff_loss = HausdorffDTLoss()
     # BCE_loss = nn.BCEWithLogitsLoss()
-    # CE_loss = nn.CrossEntropyLoss()
-    huber_loss = nn.SmoothL1Loss()
+    CE_loss = nn.CrossEntropyLoss()
+    # huber_loss = nn.SmoothL1Loss()
     loss_name = 'huber_loss'
     # losses = {
     #             "dice_loss": dice_loss,
@@ -73,9 +73,9 @@ def main():
     # optimizer
     optimizer = torch.optim.Adam(model.parameters(), args.lr)
     # load the data
-    train_loader, val_loader,max_age,min_age = get_loader(args)
+    train_loader, val_loader = get_loader(args)
     # training
-    epoch_loss_values, metric_values = training(args, train_loader, val_loader, model, optimizer, device, huber_loss, args.model_save_dir, len(train_loader.dataset),max_age,min_age)
+    epoch_loss_values, metric_values = training(args, train_loader, val_loader, model, optimizer, device, CE_loss, args.model_save_dir, len(train_loader.dataset))
     # save hyper-parameters
     hyper_para = {"batch_size": args.batch_size,
                    "lr": args.lr, "epochs": args.epochs,

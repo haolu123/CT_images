@@ -49,46 +49,47 @@ def get_loader(args):
     # class 6: age 85-95, gender : Male,
     # class 7: age 85-95, gender : Famale,
     # generate the labels
-    # label_list = []
-    # for label in labels:
-    #     age = label['age']
-    #     gender = label['gender']
-    #     if age >= 55 and age < 65:
-    #         if gender == 'Male':
-    #             label_list.append(0)
-    #         else:
-    #             label_list.append(1)
-    #     elif age >= 65 and age < 75:
-    #         if gender == 'Male':
-    #             label_list.append(2)
-    #         else:
-    #             label_list.append(3)
-    #     elif age >= 75 and age < 85:
-    #         if gender == 'Male':
-    #             label_list.append(4)
-    #         else:
-    #             label_list.append(5)
-    #     elif age >= 85 and age <= 95:
-    #         if gender == 'Male':
-    #             label_list.append(6)
-    #         else:
-    #             label_list.append(7)
+    
+    label_list = []
+    for label in labels:
+        age = label['age']
+        gender = label['gender']
+        if age >= 55 and age < 65:
+            if gender == 'Male':
+                label_list.append(0)
+            else:
+                label_list.append(1)
+        elif age >= 65 and age < 75:
+            if gender == 'Male':
+                label_list.append(2)
+            else:
+                label_list.append(3)
+        elif age >= 75 and age < 85:
+            if gender == 'Male':
+                label_list.append(4)
+            else:
+                label_list.append(5)
+        elif age >= 85 and age <= 95:
+            if gender == 'Male':
+                label_list.append(6)
+            else:
+                label_list.append(7)
 
     
-    map_three_categories = {'Frail': 0, 'Prefrail': 1, 'Not frail': 2,}
-    map_two_categories = {'Abnormal': 0, 'Normal': 1}
-    map_gender = {'Male': 0, 'Female': 1}
+    # map_three_categories = {'Frail': 0, 'Prefrail': 1, 'Not frail': 2,}
+    # map_two_categories = {'Abnormal': 0, 'Normal': 1}
+    # map_gender = {'Male': 0, 'Female': 1}
 
-    label_list = [[
-                    label['eFI'], 
-                    map_three_categories[label['Three Categories']], 
-                    map_two_categories[label['Two Categories']], 
-                    map_gender[label['gender']],
-                    label['age']
-                ] for label in labels]
-    max_age = max([label[4] for label in label_list])
-    min_age = min([label[4] for label in label_list])
-    label_list = [[label[0], label[1], label[2], label[3], (label[4]-min_age)/(max_age-min_age)] for label in label_list]
+    # label_list = [[
+    #                 label['eFI'], 
+    #                 map_three_categories[label['Three Categories']], 
+    #                 map_two_categories[label['Two Categories']], 
+    #                 map_gender[label['gender']],
+    #                 label['age']
+    #             ] for label in labels]
+    # max_age = max([label[4] for label in label_list])
+    # min_age = min([label[4] for label in label_list])
+    # label_list = [[label[0], label[1], label[2], label[3], (label[4]-min_age)/(max_age-min_age)] for label in label_list]
 
     # set the training and validation split
     data_dicts = []
@@ -175,7 +176,7 @@ def get_loader(args):
     val_ds = Dataset(data=val_files, transform=val_transforms)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size, num_workers=num_workers, shuffle=False, drop_last=True)
 
-    return train_loader, val_loader, max_age, min_age
+    return train_loader, val_loader
 
 if __name__ == '__main__':
     from parser import parse_args
