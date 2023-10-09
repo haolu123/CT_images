@@ -70,3 +70,12 @@ class HausdorffDTLoss(nn.Module):
 
         else:
             return loss
+        
+
+class LogcoshLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        
+    def forward(self, pred, target):
+        return torch.mean(torch.log(torch.cosh(pred - target)))
+    
